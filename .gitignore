@@ -10,3 +10,4 @@ venv
 dist
 build
 sandbox/
+.vscode/
