@@ -14,7 +14,10 @@ Install this library using `pip`:
 
 ## Usage
 
-Usage instructions go here.
+```shell
+spotify-to-sqlite my_spotify_data.zip spotify.db
+```
+
 
 ## Development
 
