@@ -1,2 +1,1 @@
-def example_function():
-    return 1 + 1
+from .constants import __app_name__, __version__

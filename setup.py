@@ -27,7 +27,14 @@ setup(
     license="Apache License, Version 2.0",
     version=VERSION,
     packages=["spotify_to_sqlite"],
-    install_requires=[],
-    extras_require={"test": ["pytest"]},
+    install_requires=["typer==0.4.0", "sqlite-utils==3.24"],
+    extras_require={
+        "test": ["pytest==7.0.1"],
+        "dev": ["black", "rich", "datasette", "ipykernel", "isort", "pytest"],
+    },
     python_requires=">=3.6",
+    entry_points="""
+        [console_scripts]
+        spotify-to-sqlite=spotify_to_sqlite.cli:cli
+    """,
 )
