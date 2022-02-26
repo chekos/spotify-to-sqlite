@@ -136,8 +136,19 @@ def get_audio_features(
     spotify_db = Database(db_path)
 
     # library tracks
-    lib_tracks = spotify_db.execute(f"select uri from your_library_tracks;").fetchall()
-    for lib_track in track(lib_tracks, total=len(lib_tracks)):
+    if "library_tracks_audio_features" in spotify_db.table_names():
+        lib_tracks = spotify_db.execute(
+            "select uri from your_library_tracks where uri not in (select uri from library_tracks_audio_features);"
+        ).fetchall()
+    else:
+        lib_tracks = spotify_db.execute(
+            f"select uri from your_library_tracks;"
+        ).fetchall()
+    for lib_track in track(
+        lib_tracks,
+        total=len(lib_tracks),
+        description="Working on your library tracks...",
+    ):
         track_uri = lib_track[0]
 
         track_info = get_track_info(track_uri, is_uri=True)
@@ -150,9 +161,21 @@ def get_audio_features(
         )
 
     # streaming history tracks
-    streaming_history_q_results = spotify_db.execute(
-        f"select artistName, trackName from streaming_history;"
-    ).fetchall()
+    if "streaming_history_audio_features" in spotify_db.table_names():
+        streaming_history_q_results = spotify_db.execute(
+            """
+        select artistName, trackName from streaming_history 
+        where artistName || " - " || trackName not in (
+            select 
+              json_extract(artists_names, "$[0]") || " - " || name
+            from streaming_history_audio_features
+            );
+        """
+        )
+    else:
+        streaming_history_q_results = spotify_db.execute(
+            f"select artistName, trackName from streaming_history;"
+        ).fetchall()
     search_queries = set()
     for item in streaming_history_q_results:
         _query = f"{item[0]} {item[1]}"
@@ -162,14 +185,18 @@ def get_audio_features(
 
     skipped_queries = []
     skipped_audio_features = []
-    for query in track(search_queries, total=len(search_queries)):
+    for query in track(
+        search_queries,
+        total=len(search_queries),
+        description="Working on your streaming history...",
+    ):
         track_info = get_track_info(query)
         if track_info:
             track_audio_features = sp.audio_features(track_info["uri"])[0]
             if track_audio_features:
                 track_data = {**track_info, **track_audio_features}
                 spotify_db["streaming_history_audio_features"].insert(
-                    track_data, hash_id="hash_id", ignore=True
+                    track_data, hash_id="hash_id", ignore=True, alter=True
                 )
             skipped_audio_features.append(track_info)
         else:
