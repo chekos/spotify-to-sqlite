@@ -22,6 +22,9 @@ jobs:
       run: |
         pip install -e '.[test]'
     - name: Run tests
+      env:
+        SPOTIPY_CLIENT_ID: ${{ secrets.SPOTIPY_CLIENT_ID }}
+        SPOTIPY_CLIENT_SECRET: ${{ secrets.SPOTIPY_CLIENT_SECRET }}
       run: |
         pytest
   deploy:
