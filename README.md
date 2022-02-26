@@ -24,7 +24,7 @@ spotify-to-sqlite my_spotify_data.zip spotify.db
 To contribute to this library, first checkout the code. Then create a new virtual environment:
 
     cd spotify-to-sqlite
-    python -mvenv venv
+    python -m venv venv
     source venv/bin/activate
 
 Or if you are using `pipenv`:
