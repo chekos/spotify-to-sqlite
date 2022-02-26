@@ -73,7 +73,10 @@ def convert_export(export: Path, db_path: Path, recreate: bool = False):
     for file in track(file_tables.keys(), description="Converting..."):
         table_name = file_tables[file]
         with export.open(file, "r") as data_file:
-            data = json.loads(data_file.read())
+            try:
+                data = json.loads(data_file.read())
+            except:
+                print(f"Error loading {file}. Skipping..")
 
         if table_name == "playlist":
             data = data["playlists"]
