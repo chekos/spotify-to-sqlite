@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from datetime import datetime as dt
 from pathlib import Path
@@ -15,7 +16,14 @@ from .constants import __app_name__, __version__
 
 load_dotenv()
 
-sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+client_id = os.environ.get("SPOTIPY_CLIENT_ID", " ")
+client_secret = os.environ.get("SPOTIPY_CLIENT_SECRET", " ")
+
+sp = spotipy.Spotify(
+    client_credentials_manager=SpotifyClientCredentials(
+        client_id=client_id, client_secret=client_secret
+    )
+)
 
 
 def _version_callback(value: bool) -> None:
