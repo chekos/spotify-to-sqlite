@@ -1,7 +1,19 @@
-from setuptools import setup
 import os
 
+from setuptools import setup
+
 VERSION = "0.1"
+
+test_requirements = ["pytest>=7.0.1", "pytest-dotenv>=0.5.2"]
+jupyter_extras = ["ipywidgets==7.6.5"]
+dev_requirements = [
+    "black>=22.1.0",
+    "datasette>=0.60.2",
+    "ipykernel>=6.9.1",
+    "isort>=5.10.1",
+]
+dev_requirements.extend(test_requirements)
+dev_requirements.extend(jupyter_extras)
 
 
 def get_long_description():
@@ -27,10 +39,17 @@ setup(
     license="Apache License, Version 2.0",
     version=VERSION,
     packages=["spotify_to_sqlite"],
-    install_requires=["typer==0.4.0", "sqlite-utils==3.24"],
+    install_requires=[
+        "typer==0.4.0",
+        "sqlite-utils==3.24",
+        "spotipy==2.19",
+        "python-dotenv==0.19.2",
+        "rich==11.2.0",
+    ],
     extras_require={
-        "test": ["pytest==7.0.1"],
-        "dev": ["black", "rich", "datasette", "ipykernel", "isort", "pytest"],
+        "test": test_requirements,
+        "jupyter": jupyter_extras,
+        "dev": dev_requirements,
     },
     python_requires=">=3.6",
     entry_points="""
