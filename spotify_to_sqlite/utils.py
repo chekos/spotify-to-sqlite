@@ -206,7 +206,7 @@ def get_audio_features(
         f"""
     CREATE TABLE enriched_streaming_history AS
     SELECT
-        streaming_history.id,
+        _id,
         endTime,
         artistName as artist,
         json_extract(artists_uris, "$[0]") as artist_uri,

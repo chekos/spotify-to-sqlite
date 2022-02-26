@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup
 
-VERSION = "0.1.3.1"
+VERSION = "0.1.3.2"
 
 test_requirements = ["pytest>=7.0.1", "pytest-dotenv>=0.5.2"]
 jupyter_extras = ["ipywidgets==7.6.5"]
