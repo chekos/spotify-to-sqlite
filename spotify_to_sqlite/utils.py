@@ -140,24 +140,16 @@ def get_audio_features(
         lib_tracks = spotify_db.execute(
             "select uri from your_library_tracks where uri not in (select uri from library_tracks_audio_features);"
         ).fetchall()
-    else:
+    elif "your_library_tracks" in spotify_db.table_names():
         lib_tracks = spotify_db.execute(
             f"select uri from your_library_tracks;"
         ).fetchall()
-    for lib_track in track(
-        lib_tracks,
-        total=len(lib_tracks),
-        description="Working on your library tracks...",
-    ):
-        track_uri = lib_track[0]
+    else:
+        pass
 
-        track_info = get_track_info(track_uri, is_uri=True)
-        track_audio_features = sp.audio_features(track_uri)[0]
-
-        track_data = {**track_info, **track_audio_features}
-
-        spotify_db["library_tracks_audio_features"].insert(
-            track_data, pk="id", ignore=True
+    if lib_tracks:
+        get_audio_features_from_uri(
+            lib_tracks, "library_tracks_audio_features", spotify_db
         )
 
     # streaming history tracks
@@ -268,3 +260,19 @@ def get_track_info(query: str, is_uri: bool = False):
     _track["updated_at"] = dt.utcnow()
 
     return _track
+
+
+def get_audio_features_from_uri(uris: list, table_name: str, db: Database):
+    for lib_track in track(
+        uris,
+        total=len(uris),
+        description=f"Working on tracks for {table_name}...",
+    ):
+        track_uri = lib_track[0]
+
+        track_info = get_track_info(track_uri, is_uri=True)
+        track_audio_features = sp.audio_features(track_uri)[0]
+
+        track_data = {**track_info, **track_audio_features}
+
+        db[table_name].insert(track_data, pk="id", ignore=True)
