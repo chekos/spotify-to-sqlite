@@ -16,7 +16,7 @@ Install this library using `pip`:
 
 Convert a Spotify export zip to a SQLite database
 ```shell
-spotify-to-sqlite my_spotify_data.zip spotify.db
+spotify-to-sqlite convert my_spotify_data.zip spotify.db
 ```
 
 You can use Spotify's Web API to retrieve audio features tracks in your `streaming_history` and `your_library_tracks` tables. 
