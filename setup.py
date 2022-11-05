@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup
 
-VERSION = "0.2"
+VERSION = "0.2.1"
 
 test_requirements = ["pytest>=7.0.1", "pytest-dotenv>=0.5.2"]
 jupyter_extras = ["ipywidgets==7.6.5"]
@@ -40,11 +40,11 @@ setup(
     version=VERSION,
     packages=["spotify_to_sqlite"],
     install_requires=[
-        "typer==0.4.0",
-        "sqlite-utils==3.24",
+        "typer==0.6.1",
+        "sqlite-utils==3.30",
         "spotipy==2.19",
         "python-dotenv==0.19.2",
-        "rich==11.2.0",
+        "rich==12.6.0",
     ],
     extras_require={
         "test": test_requirements,
